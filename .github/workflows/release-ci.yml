@@ -91,30 +91,13 @@ jobs:
 
       # create nightly release
       - name: Create Nightly release
-        if: ${{ github.repository == 'rime/weasel' && github.ref == 'refs/heads/master' }}
+        if: ${{ github.repository == 'ATFieldBeast/weasel' && github.ref == 'refs/heads/master' }}
         uses: 'marvinpinto/action-automatic-releases@latest'
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GH_TOKEN }}
           automatic_release_tag: latest
           prerelease: true
           title: "Nightly Build"
           files: |
             ./output/archives/weasel*.exe
             ./output/archives/debug_symbols.7z
-        
-      # create stable release
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: ${{ github.repository == 'rime/weasel' && startsWith(github.ref, 'refs/tags/') }}
-        with:
-          draft: true
-          files: |
-            ./output/archives/weasel*.exe
-            ./output/archives/debug_symbols.7z
-          body_path: ${{ github.workspace }}/RELEASE_CHANGELOG.md
-        
-      - name: Update testing Appcast
-        if: ${{ github.repository == 'rime/weasel' }}
-        run: gh workflow run gh-pages.yml -R rime/home --ref master
-        env:
-          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
